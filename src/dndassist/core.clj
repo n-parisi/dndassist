@@ -1,13 +1,13 @@
 (ns dndassist.core
   (:require
     [dndassist.parse.core :as p]
-    [dndassist.charactere.core :as c])
+    [dndassist.character.core :as c])
   (:gen-class))
 
 ;Set up character map
 (def character-data {:w "resources/wiskath.json"
-                     ;:t "resources/toeni.json"
-                     ;:m "resources/mungo.json"
+                     :t "resources/toeni.json"
+                     :m "resources/mungo.json"
                      })
 (def chars-map (reduce (fn [chars-map [char-key char-json]]
                          (assoc chars-map char-key (p/json-to-char-map (slurp char-json))))
@@ -34,7 +34,7 @@
 (defn hp
   "Return [current-hp max-hp] for character"
   [char-key]
-  (c/get-hp (char-key chars-map)))
+  (c/hp (char-key chars-map)))
 
 (defn stat
   "Return [stat mod]"
@@ -44,12 +44,12 @@
 (defn level
   "Return total level for character"
   [char-key]
-  (c/get-level (char-key chars-map)))
+  (c/level (char-key chars-map)))
 
 (defn ac
   "Return AC for character"
   [char-key]
-  (c/get-ac (char-key chars-map)))
+  (c/ac (char-key chars-map)))
 
 (defn -main
   "I don't do a whole lot ... yet."

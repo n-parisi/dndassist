@@ -1,4 +1,4 @@
-(ns dndassist.charactere.core
+(ns dndassist.character.core
   (:gen-class))
 
 ;CONSTANTS
@@ -24,11 +24,12 @@
     ))
 
 ;ATTRIBUTES
-(defn get-level
+(defn level
   "Return total level"
   [char-map]
-  (let [classes (class-list char-map)]
-    (reduce (fn [total-level class] (+ total-level (:level class))) 0 classes)
+  (let [classes (class-list char-map)
+        levels (map :level classes)]
+    (reduce + levels)
     ))
 
 (defn get-stat
@@ -50,22 +51,23 @@
                              (+ mod-score (mod-category-score mods)))
                            0
                            (:modifiers pc))
-        total-attr (+ base-attr bonus-attr)]
-    [total-attr (int (/ (- total-attr 10) 2))]
+        total-attr (+ base-attr bonus-attr)
+        stat-mod (-> total-attr (- 10) (/ 2) int)]
+    [total-attr stat-mod]
     ))
 
-(defn get-hp
+(defn hp
   "Returns HP snapshot [current-hp max-hp"
   [char-map]
   (let [pc (:character char-map)
         base-hp (:baseHitPoints pc)
-        bonus-hp (* (second (get-stat char-map :con)) (get-level char-map))
+        bonus-hp (* (second (get-stat char-map :con)) (level char-map))
         max-hp (+ base-hp bonus-hp)
         lost-hp (:removedHitPoints pc)]
     [(- max-hp lost-hp) max-hp]))
 
-; How to know when to apply dex bonus? Need helper function with SRD lookup
-(defn get-ac
+;TODO: How to know when to apply dex bonus? Need helper function with SRD lookup
+(defn ac
   "Returns character AC"
   [char-map]
   (let [pc (:character char-map)
@@ -80,7 +82,10 @@
 ;ABILITIES
 ;get all abilities. get prepared(?) abilities
 
+
 ;SPELLS
+;spell slots
+
 (defn spells-for-level
   "Return map of all known spells grouped by level"
   [char-map]
@@ -97,7 +102,7 @@
             all-spells)))
 
 ;functions to apply to an individual spell
-(defn get-spell-name
+(defn spell-name
   "Apply to a spell and return its name"
   [spell]
   (get-in spell [:definition :name]))
@@ -111,7 +116,7 @@
 (defn spell-names
   "Apply to a map of spells to return just their names"
   [spell-map]
-  (reduce (fn [altered-map [level spells]] (assoc altered-map level (map get-spell-name spells))) {} spell-map))
+  (reduce (fn [altered-map [level spells]] (assoc altered-map level (map spell-name spells))) {} spell-map))
 
 (defn prepared-spells
   "Apply to a map of spells to filter out spells that aren't prepared"

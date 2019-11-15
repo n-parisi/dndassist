@@ -1,0 +1,148 @@
+{
+  "character": {
+    "baseHitPoints": 18,
+    "removedHitPoints": 10,
+    "stats": [
+      {
+        "id": 1,
+        "name": null,
+        "value": 8
+      },
+      {
+        "id": 2,
+        "name": null,
+        "value": 14
+      },
+      {
+        "id": 3,
+        "name": null,
+        "value": 13
+      },
+      {
+        "id": 4,
+        "name": null,
+        "value": 12
+      },
+      {
+        "id": 5,
+        "name": null,
+        "value": 15
+      },
+      {
+        "id": 6,
+        "name": null,
+        "value": 10
+      }
+    ],
+    "classes": [
+      {
+        "level": 3,
+        "isStartingClass": true,
+        "hitDiceUsed": 0,
+        "definition": {
+          "name": "Druid",
+          "canCastSpells": true,
+          "knowsAllSpells": true,
+          "primaryAbilities": [
+            5
+          ],
+          "spellRules": {
+            "levelSpellSlots": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                4,
+                3,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "subclassDefinition": {
+          "name": "Circle of the Land (Coast)"
+        }
+      }
+    ],
+    "modifiers": {
+      "race": [
+        {
+          "entityId": 6,
+          "type": "bonus",
+          "subType": "charisma-score",
+          "value": 2
+        },
+        {
+          "entityId": 4,
+          "type": "bonus",
+          "subType": "intelligence-score",
+          "value": 1
+        },
+        {
+          "entityId": 5,
+          "type": "bonus",
+          "subType": "wisdom-score",
+          "value": 1
+        }
+      ]
+    }
+  }
+}
