@@ -14,6 +14,19 @@
                        {}
                        character-data))
 
+(defn all
+  "Helper function to call a function on every character"
+  [function & argz]
+   (let [char-keys (keys chars-map)]
+     (map #(let [result (if (nil? argz)
+                          (function %)
+                          (apply function % argz))]
+             (do
+              (println % "\n" result "\n")
+              result))
+     char-keys)
+     ))
+
 (defn spells
   "Return a map with level->[spells] where spells are names only. Optional to show prepared spells only"
   ([char-key]
@@ -50,6 +63,17 @@
   "Return AC for character"
   [char-key]
   (c/ac (char-key chars-map)))
+
+(defn actions
+  "Return list of actions"
+  ([char-key]
+   (actions char-key :n))
+  ([char-key option]
+  (let [action-list (c/actions (char-key chars-map))]
+    (cond
+      (= option :n) (c/action-names action-list)
+      (= option :d) (c/action-descriptions action-list)
+      :else action-list))))
 
 (defn -main
   "I don't do a whole lot ... yet."

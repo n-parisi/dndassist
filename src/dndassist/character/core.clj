@@ -44,13 +44,11 @@
         ;helper functions for filtering/suming lists of modifiers
         mod-filter #(and (= (:type %) "bonus") (= (:entityId %) stat-id))
         mod-category-score #(reduce (fn [cat-score mod] (+ cat-score (:value mod)))
-                                    0
-                                    (filter mod-filter %))
+                                    0 (filter mod-filter %))
         ;total bonus modifier from all modifiers
         bonus-attr (reduce (fn [mod-score [mod-category mods]]
                              (+ mod-score (mod-category-score mods)))
-                           0
-                           (:modifiers pc))
+                           0 (:modifiers pc))
         total-attr (+ base-attr bonus-attr)
         stat-mod (-> total-attr (- 10) (/ 2) int)]
     [total-attr stat-mod]
@@ -66,7 +64,18 @@
         lost-hp (:removedHitPoints pc)]
     [(- max-hp lost-hp) max-hp]))
 
-;TODO: How to know when to apply dex bonus? Need helper function with SRD lookup
+;ac needs a test
+(defn armor-bonus
+  [char-map armor-def]
+  "Helper function to get AC bonus for char and armorType"
+  (let [armorTypeId (:armorTypeId armor-def)
+        dex-bonus (second (get-stat char-map :dex))]
+    (cond
+      (= armorTypeId 1) dex-bonus
+      (= armorTypeId 2) (if (> dex-bonus 2) 2 dex-bonus)
+      :else 0)
+    ))
+
 (defn ac
   "Returns character AC"
   [char-map]
@@ -74,18 +83,41 @@
         inventory (:inventory pc)
         armor-filter #(= (get-in % [:definition :filterType]) "Armor")
         equipped-filter #(:equipped %)
-        all-equipped-armor (filter equipped-filter (filter armor-filter inventory))
-        ac-scores (map #(get-in % [:definition :armorClass]) all-equipped-armor)
-        dex-bonus (second (get-stat char-map :dex))]
-    (+ dex-bonus (reduce + ac-scores))))
+        all-equipped-armor (->> inventory (filter armor-filter) (filter equipped-filter))
+        ]
+    (reduce (fn [ac-score armor] (let [armor-def (:definition armor)]
+                                   (+ ac-score (:armorClass armor-def) (armor-bonus char-map armor-def))))
+            0 all-equipped-armor)
+    ))
 
-;ABILITIES
-;get all abilities. get prepared(?) abilities
+;ACTIONS
+;actions need tests :(
+(defn actions
+  "Return list of actions character can take"
+  [char-map]
+  (let [actions (get-in char-map [:character :actions])]
+    (reduce (fn [action-list [action-cat cat-actions]] (concat action-list cat-actions)) [] actions)
+    ))
 
+(defn action-names
+  "Turn list of actions into names only"
+  [action-list]
+  (map :name action-list)
+  )
+
+;Could use an HTML tag stripper for :description
+(defn action-descriptions
+  "Turn lsit of actions in name - description pairs"
+  [action-list]
+  (map #(vector (:name %) (:description %)) action-list))
+
+;PASSIVE SKILLS
+;;PROCIFIENCIES
 
 ;SPELLS
-;spell slots
+;spell slots - have to compare two diff data sets
 
+;spells need tests :(
 (defn spells-for-level
   "Return map of all known spells grouped by level"
   [char-map]
