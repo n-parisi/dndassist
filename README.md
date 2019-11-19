@@ -2,13 +2,13 @@
 
 Tools for parsing character sheets from dndbeyond and doing things with them
 
-###Run
+### Run
 
 This is a Leiningen project. Fire up a REPL and go nuts. 
 
 `lein repl`
 
-###Roadmap
+##### Roadmap
 * Finish out parser basics
 * Combat runner
 * Actual Readme
