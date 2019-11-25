@@ -1,7 +1,8 @@
 (ns dndassist.core
   (:require
     [dndassist.parse.core :as p]
-    [dndassist.character.core :as c])
+    [dndassist.character.core :as c]
+    [dndassist.fetch.core :as f])
   (:gen-class))
 
 ;Set up character map
@@ -13,6 +14,11 @@
                          (assoc chars-map char-key (p/json-to-char-map (slurp char-json))))
                        {}
                        character-data))
+
+(defn fetch
+  "Fetch latest JSON from DNDBeyond.com"
+  []
+  (f/test-fetch))
 
 (defn all
   "Helper function to call a function on every character"
